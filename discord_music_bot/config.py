@@ -22,4 +22,6 @@ with env.prefixed("SPOTIFY_"):
         "client_secret": env.str("CLIENT_SECRET"),
     }
 
+YOUTUBE_SEARCH_LIMIT = env.int("YOUTUBE_SEARCH_LIMIT")
+
 LOGGING_CONFIG: dict = env.json("LOGGING_CONFIG")

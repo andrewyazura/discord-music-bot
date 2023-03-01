@@ -28,9 +28,29 @@ class StreamingCommands(BaseCog):
     ) -> None:
         player: wavelink.Player = ctx.voice_client
 
+        if not validators.url(query):
+            await self.search(ctx, query=query)
+            return
+
         player.queue.put(
             await wavelink.YouTubeTrack.search(query=query, return_first=True)
         )
+
+    async def search(
+        self, ctx: discord.ApplicationContext, *, query: str
+    ) -> None:
+        embed = discord.Embed(
+            title=f"Resuls for {query}:", colour=discord.Colour.random()
+        )
+
+        tracks = await wavelink.YouTubeTrack.search(query=query)
+        for i, track in zip(range(config.YOUTUBE_SEARCH_LIMIT), tracks):
+            embed.add_field(
+                name=f"{i + 1}. **{track.title}**",
+                value=f"by **{track.author}**",
+            )
+
+        await ctx.respond(embed=embed)
 
     @discord.slash_command(
         name="sp",
